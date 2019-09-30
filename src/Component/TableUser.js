@@ -1,23 +1,48 @@
 import React, { useState } from 'react';
-import { Table, Input, Button, Popconfirm, Form, Modal } from 'antd';
+import { Table, Popconfirm, Pagination, Button } from 'antd';
 import ModalCustomer from './ModalCustomer';
 
 export default function TableUser(props) {
 
-  const handleDelete = async (uuid) => {
+  /////// Visible form Modal
+  const [visible, setVisible] = useState(undefined);
+  const [dataCustomer, setDataCustomer] = useState({});
+  ////// Check type Modal
+
+  const PAGE_SIZE = 7;
+  const _handleDelete = async (uuid, data) => {
+    console.log(uuid);
     await props.DeleteCustomer(uuid)
-    await props.GetListCustomer();
+    await props.GetListCustomerPagin(PAGE_SIZE, props.dataGetList.pager.pageNum)
+
   }
 
-  const EditCustomer = async (data) => {
-    const dataUpdate = {uuid: data.uuid, full_name:data.full_name,phone:data.phone,address:data.address}
+  const _EditCustomer = async (data) => {
+    const dataUpdate = { uuid: data.uuid, full_name: data.full_name, phone: data.phone, address: data.address }
     await props.UpdateCustomer(dataUpdate)
-    await props.GetListCustomer();
+    await props.GetListCustomerPagin(PAGE_SIZE, props.dataGetList.pager.pageNum)
   }
 
-  const AddNewCustomer = async (data) => {
-    await props.CreateCustomer(data.fullName,data.phone,data.address);
-    await props.GetListCustomer();
+  const _AddNewCustomer = async (data) => {
+    await props.CreateCustomer(data.full_name, data.phone, data.address);
+    await props.GetListCustomerPagin(PAGE_SIZE, props.dataGetList.pager.pageNum)
+  }
+
+
+  const _handleConfirm = (data) => {
+    console.log(data);
+
+    switch (visible !== undefined) {
+      case visible === "new":
+        _AddNewCustomer(data)
+        break;
+      case visible === "update":
+        _EditCustomer(data)
+        break;
+
+      default:
+        break;
+    }
 
   }
 
@@ -26,13 +51,13 @@ export default function TableUser(props) {
       title: 'Index',
       dataIndex: 'id',
       key: 'id',
-      render: text => <p>{text+1}</p>,
+      render: text => <p>{text + 1}</p>,
     },
     {
       title: 'Full name',
       dataIndex: 'full_name',
       key: 'full_name',
-      render: text => <a href="#">{text}</a>,
+      render: text => <p style={{ cursor: "pointer", color: "#40A9FF" }}>{text}</p>,
     },
     {
       title: 'Address',
@@ -45,49 +70,70 @@ export default function TableUser(props) {
       key: 'code'
     },
     {
-      key: "action",
+      key: "actionEdit",
       title: '',
       dataIndex: 'uuid',
-      render: (uuid, dataCustomer)=>
-        props.dataGetList.length >= 1 ? (
-          <div style={{
-            display: "flex", justifyContent: "space-around", alignItems: "center"
-          }}>
-            <ModalCustomer
-              title="Edit"
-              dataNeedUpdate = {dataCustomer}
-              modalTitle="Edit info customer !"
-              btnDefault={false}
-              handleConfirm = {(data)=>EditCustomer(data)}
-            />
-            <Popconfirm title="Are you sure delete this customer ?"            onConfirm={() => handleDelete(uuid)}>
-              <p style={{ cursor: "pointer", color: "#F5222D" }}>Delete</p>
-            </Popconfirm>
-          </div>
-        ) : null,
+      render: (uuid, dataCustomer) => <Button type="primary" onClick={_showEdit}
+      >
+        Edit </Button>
+    },
+    {
+      key: "actionDelete",
+      title: '',
+      dataIndex: 'uuid',
+      render: (uuid, dataCustomer) => <Popconfirm
+        title="Are you sure delete this customer ?" onConfirm={_handleDelete}>
+        <Button type="danger">Delete</Button>
+      </Popconfirm>
     },
   ];
+
+  const _showHideModal = (toogle) => {
+    setVisible(toogle)
+  }
+
+  const _handleChangePage = async (pageNum, pageSize) => {
+    props.GetListCustomerPagin(pageSize, pageNum)
+  }
+
+  const _showAddNew = () => {
+    setVisible("new")
+  }
+  const _showEdit = () => {
+    setVisible("update");
+  }
 
   return (
     <div>
       <div style={{ margin: "10px", position: 'relative' }}>
+        <Button type="primary" onClick={_showAddNew}>
+          New
+        </Button>
         <Table
           loading={props.loadingTable}
-          pagination={{ pageSize: 6 }}
+          pagination={false}
           columns={columns}
-          dataSource={props.dataGetList}
-          rowKey="tableCustomer"
+          dataSource={props.dataGetList.data}
+          rowKey="uuid"
         />
+        <div>
+          <Pagination
+            total={(props.dataGetList.data && props.dataGetList.data.length > 0) ? props.dataGetList.pager.total : 1}
+            pageSize={7}
+            defaultCurrent={1}
+            onChange={_handleChangePage}
+          />
+        </div>
         <div style={{
           position: "absolute",
           top: "2%",
           right: "0",
         }}>
           <ModalCustomer
-            title="Add Customer"
-            modalTitle="Add a new customer !"
-            btnDefault={true}
-             handleConfirm = {(data)=>AddNewCustomer(data)}
+            type={visible}
+            handleConfirm={_handleConfirm}
+            visible={visible}
+            showHideModal={_showHideModal}
           />
         </div>
       </div>

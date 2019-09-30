@@ -73,11 +73,77 @@ export const GetListCustomer = () => async (dispatch, getState) => {
     }
 }
 
+/**
+ * 
+ * @param {number*} limitPerPage 
+ * @param {number*} PageNumber 
+ */
+export const GetListCustomerPagin = (limitPerPage, PageNumber) => async (dispatch, getState) => {
+    dispatch(GetListCustomerStart({
+        listCustomer: {
+            ...getState().CustomerReducer.listCustomer,
+            loading: true,
+        }
+    }));
+
+    const dataQueryFormat = {
+        limit: limitPerPage,
+        pageNum: PageNumber
+    }
+
+
+    try {
+        const res = await Axios.get(apiGetListCustomer, {params:dataQueryFormat});
+        const { data } = res;
+        const isSuccess = data.isSuccess && res.status === API_SUCCESS && true
+
+        if (data && isSuccess) {
+            console.log(res);
+            dispatch(GetListCustomerSuccess({
+                listCustomer: {
+                    ...getState().CustomerReducer.listCustomer,
+                    loading: false,
+                    data: data.data,
+                    error: {
+                        errorCode: "",
+                        message: ""
+                    }
+                }
+            }))
+        } else {
+            console.log(res);
+            dispatch(GetListCustomerFail({
+                listCustomer: {
+                    ...getState().CustomerReducer.listCustomer,
+                    loading: false,
+                    error: {
+                        errorCode: "",
+                        message: "Client Connect Failed"
+                    }
+                }
+            }));
+        }
+    } catch (err) {
+        console.log(err);
+        dispatch(GetListCustomerFail({
+            listCustomer: {
+                ...getState().CustomerReducer.listCustomer,
+                loading: false,
+                error: {
+                    errorCode: "",
+                    message: err
+                }
+            }
+        }));
+    }
+}
+
 export const GetListCustomerAction = {
     /////// GetListCustomer ////////
     GetListCustomerStart,
     GetListCustomerSuccess,
     GetListCustomerFail,
-    GetListCustomer
+    GetListCustomer,
+    GetListCustomerPagin
 
 }
