@@ -33,7 +33,7 @@ export const GetListCustomer = () => async (dispatch, getState) => {
         const isSuccess = data.isSuccess && res.status === API_SUCCESS && true
 
         if (data && isSuccess) {
-            console.log(res);
+            // console.log(res);
             dispatch(GetListCustomerSuccess({
                 listCustomer: {
                     ...getState().CustomerReducer.listCustomer,
@@ -46,7 +46,7 @@ export const GetListCustomer = () => async (dispatch, getState) => {
                 }
             }))
         } else {
-            console.log(res);
+            // console.log(res);
             dispatch(GetListCustomerFail({
                 listCustomer: {
                     ...getState().CustomerReducer.listCustomer,
@@ -59,7 +59,7 @@ export const GetListCustomer = () => async (dispatch, getState) => {
             }));
         }
     } catch (err) {
-        console.log(err);
+        // console.log(err);
         dispatch(GetListCustomerFail({
             listCustomer: {
                 ...getState().CustomerReducer.listCustomer,
@@ -98,7 +98,7 @@ export const GetListCustomerPagin = (limitPerPage, PageNumber) => async (dispatc
         const isSuccess = data.isSuccess && res.status === API_SUCCESS && true
 
         if (data && isSuccess) {
-            console.log(res);
+            // console.log(res);
             dispatch(GetListCustomerSuccess({
                 listCustomer: {
                     ...getState().CustomerReducer.listCustomer,
@@ -111,7 +111,7 @@ export const GetListCustomerPagin = (limitPerPage, PageNumber) => async (dispatc
                 }
             }))
         } else {
-            console.log(res);
+            // console.log(res);
             dispatch(GetListCustomerFail({
                 listCustomer: {
                     ...getState().CustomerReducer.listCustomer,
@@ -124,7 +124,7 @@ export const GetListCustomerPagin = (limitPerPage, PageNumber) => async (dispatc
             }));
         }
     } catch (err) {
-        console.log(err);
+        // console.log(err);
         dispatch(GetListCustomerFail({
             listCustomer: {
                 ...getState().CustomerReducer.listCustomer,

@@ -41,7 +41,7 @@ export const UpdateCustomer = (dataQuery) => async (dispatch, getState) => {
         const { data } = res;
         const isSuccess = data.isSuccess && res.status === API_SUCCESS && true;
         if (data && isSuccess) {
-            console.log(res);
+            // console.log(res);
             dispatch(UpdateCustomerSuccess({
                 listCustomer: {
                     ...getState().CustomerReducer.listCustomer,
@@ -54,7 +54,7 @@ export const UpdateCustomer = (dataQuery) => async (dispatch, getState) => {
                 }
             }));
         } else {
-            console.log(res);
+            // console.log(res);
             dispatch(UpdateCustomerFail({
                 listCustomer: {
                     ...getState().CustomerReducer.listCustomer,
@@ -67,7 +67,7 @@ export const UpdateCustomer = (dataQuery) => async (dispatch, getState) => {
             }));
         }
     } catch (err) {
-        console.log(err);
+        // console.log(err);
         dispatch(UpdateCustomerFail({
             listCustomer: {
                 ...getState().CustomerReducer.listCustomer,

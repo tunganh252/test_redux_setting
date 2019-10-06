@@ -31,7 +31,7 @@ export const DeleteCustomer = (uuid) => async (dispatch, getState) => {
         const { data } = res;
         const isSuccess = data.isSuccess && res.status === API_SUCCESS && true;
         if (isSuccess) {
-            console.log(res);
+            // console.log(res);
             dispatch(DeleteCustomerSuccess({
                 listCustomer: {
                     ...getState().CustomerReducer.listCustomer,
@@ -43,7 +43,7 @@ export const DeleteCustomer = (uuid) => async (dispatch, getState) => {
                 }
             }));
         } else {
-            console.log(res);
+            // console.log(res);
             dispatch(DeleteCustomerFail({
                 listCustomer: {
                     ...getState().CustomerReducer.listCustomer,
@@ -56,7 +56,7 @@ export const DeleteCustomer = (uuid) => async (dispatch, getState) => {
             }));
         }
     } catch (err) {
-        console.log(err);
+        // console.log(err);
         dispatch(DeleteCustomerFail({
             listCustomer: {
                 ...getState().CustomerReducer.listCustomer,

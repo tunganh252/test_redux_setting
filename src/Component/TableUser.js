@@ -7,11 +7,11 @@ export default function TableUser(props) {
   /////// Visible form Modal
   const [visible, setVisible] = useState(undefined);
   const [dataCustomer, setDataCustomer] = useState({});
+  
   ////// Check type Modal
 
   const PAGE_SIZE = 7;
   const _handleDelete = async (uuid, data) => {
-    console.log(uuid);
     await props.DeleteCustomer(uuid)
     await props.GetListCustomerPagin(PAGE_SIZE, props.dataGetList.pager.pageNum)
 
@@ -30,8 +30,6 @@ export default function TableUser(props) {
 
 
   const _handleConfirm = (data) => {
-    console.log(data);
-
     switch (visible !== undefined) {
       case visible === "new":
         _AddNewCustomer(data)
@@ -39,7 +37,6 @@ export default function TableUser(props) {
       case visible === "update":
         _EditCustomer(data)
         break;
-
       default:
         break;
     }
@@ -73,7 +70,8 @@ export default function TableUser(props) {
       key: "actionEdit",
       title: '',
       dataIndex: 'uuid',
-      render: (uuid, dataCustomer) => <Button type="primary" onClick={_showEdit}
+      render: (uuid, dataCustomer) => <Button type="primary" onClick={() => _showEdit(uuid, dataCustomer)
+      }
       >
         Edit </Button>
     },
@@ -92,15 +90,22 @@ export default function TableUser(props) {
     setVisible(toogle)
   }
 
-  const _handleChangePage = async (pageNum, pageSize) => {
+  const _handleChangePage = (pageNum, pageSize) => {
     props.GetListCustomerPagin(pageSize, pageNum)
   }
 
   const _showAddNew = () => {
-    setVisible("new")
+     setDataCustomer({})
+     setVisible("new");
   }
-  const _showEdit = () => {
-    setVisible("update");
+
+  const _showEdit = (uuid, data) => {
+     setDataCustomer(data)
+     setVisible("update");
+  }
+
+  const _setDefaultDataCustomer = () => {
+    setDataCustomer({});
   }
 
   return (
@@ -130,10 +135,12 @@ export default function TableUser(props) {
           right: "0",
         }}>
           <ModalCustomer
+            dataCustomer={dataCustomer}
             type={visible}
             handleConfirm={_handleConfirm}
             visible={visible}
             showHideModal={_showHideModal}
+            _setDefaultDataCustomer={_setDefaultDataCustomer}
           />
         </div>
       </div>

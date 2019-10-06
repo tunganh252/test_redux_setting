@@ -40,7 +40,7 @@ export const CreateCustomer = (full_name, phone, address) => async (dispatch, ge
         const { data } = res;
         const isSuccess = data.isSuccess && res.status === API_SUCCESS && true
         if (data && isSuccess) {
-            console.log(res);
+            // console.log(res);
             dispatch(CreateCustomerSuccess({
                 listCustomer: {
                     ...getState().CustomerReducer.listCustomer,
@@ -53,7 +53,7 @@ export const CreateCustomer = (full_name, phone, address) => async (dispatch, ge
                 }
             }));
         } else {
-            console.log(res);
+            // console.log(res);
             dispatch(CreateCustomerFail({
                 listCustomer: {
                     ...getState().CustomerReducer.listCustomer,
@@ -66,7 +66,7 @@ export const CreateCustomer = (full_name, phone, address) => async (dispatch, ge
             }));
         }
     } catch (err) {
-        console.log(err);
+        // console.log(err);
         dispatch(CreateCustomerFail({
             listCustomer: {
                 ...getState().CustomerReducer.listCustomer,
